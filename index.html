@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>GROWING HUB BY BRIAN👾</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --glass: rgba(0,0,0,0.55);
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: url("https://files.catbox.moe/en7ucv.jpeg") center/cover fixed no-repeat;
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    body::after{
+      content:"";
+      position:fixed; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));
+      pointer-events:none;
+    }
+    .wrap{ position:relative; z-index:1; min-height:100vh; padding:28px 16px 120px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+    h1{ margin:0; font-size:clamp(20px,4vw,36px); letter-spacing:1px; background:linear-gradient(90deg,#fff,#cfffff); -webkit-background-clip:text; color:transparent; text-shadow:0 0 14px rgba(0,229,255,0.06); }
+    .subtitle{ margin-top:6px; color:#cfeff5; opacity:0.95; font-weight:700; font-size:14px; }
+
+    .cats{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px; }
+    .cat-btn{
+      padding:9px 14px; border-radius:999px; border:none; cursor:pointer;
+      font-weight:800; color:#041018;
+      background:linear-gradient(90deg,#ff8c94,#8a2be2,#00e5ff);
+      background-size:300% 300%; animation:gradShift 6s linear infinite;
+      box-shadow:0 10px 26px rgba(0,0,0,0.5);
+    }
+    @keyframes gradShift{ 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+
+    .main { width:100%; max-width:1100px; display:flex; gap:18px; align-items:flex-start; margin-top:14px; }
+    .left { flex:1 1 720px; display:flex; flex-direction:column; gap:12px; align-items:center; }
+    .side { width:300px; min-width:220px; background:rgba(255,255,255,0.03); padding:12px; border-radius:12px; backdrop-filter:blur(6px); }
+
+    .quote-card{
+      width:100%; max-width:920px; padding:22px; border-radius:14px; background:rgba(0,0,0,0.6); position:relative; overflow:visible;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border: 2px solid transparent;
+    }
+    /* rotating neon border around the edges only */
+    .quote-card::before{
+      content:""; position:absolute; inset:-3px; border-radius:16px; z-index:-1;
+      background: conic-gradient(from 0deg, #ff0080, #ffd200, #00d4ff, #8a2be2, #ff0080);
+      filter: blur(12px); opacity:0.95; transform-origin:center;
+      animation:rotateBorder 7s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes rotateBorder{ 0%{transform:rotate(0deg)}100%{transform:rotate(360deg)} }
+
+    .quote-text{ font-size:clamp(18px,2.4vw,28px); font-weight:800; line-height:1.25; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.6); }
+    .quote-author{ font-size:14px; opacity:0.9; margin-top:8px; text-align:right; font-weight:700; color:#dfefff; }
+
+    .actions{ display:flex; gap:8px; margin-top:12px; }
+    .btn{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:800; }
+    .btn.copy{ background:linear-gradient(90deg,#7affc7,#00e5ff); color:#041018; }
+    .btn.edit{ background:linear-gradient(90deg,#ffd266,#ff8c94); color:#041018; }
+    .btn.del{ background:linear-gradient(90deg,#ff6b6b,#ff9a9e); color:#041018; }
+
+    .admin-fab{ position:fixed; right:18px; bottom:18px; width:64px; height:64px; border-radius:999px; border:none; cursor:pointer; z-index:1200;
+      display:grid; place-items:center; font-size:20px; font-weight:900; color:#02121a;
+      background:linear-gradient(145deg,#ff0080,#00e5ff); box-shadow:0 12px 30px rgba(0,0,0,0.5);
+    }
+
+    .modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:2000; background:rgba(0,0,0,0.6); }
+    .modal.open{ display:flex; }
+    .panel{ width:92%; max-width:760px; background:linear-gradient(180deg, rgba(6,6,10,0.95), rgba(10,10,20,0.98)); padding:18px; border-radius:12px; box-shadow:0 18px 50px rgba(0,0,0,0.7); color:#e8f9ff; }
+
+    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .input, textarea, select{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:rgba(255,255,255,0.02); color:#e7fbff; font-weight:700; }
+
+    .btn-primary{ padding:10px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:900; color:#041018; background:linear-gradient(90deg,#7affc7,#00e5ff); }
+    .btn-muted{ padding:10px 12px; border-radius:10px; border:none; background:rgba(255,255,255,0.03); color:#dff9ff; cursor:pointer; font-weight:800; }
+
+    footer{ position:fixed; bottom:0; left:0; right:0; padding:10px 12px; text-align:center; font-size:12px; color:rgba(255,255,255,0.9); background:linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.25)); z-index:500; }
+
+    @media(max-width:900px){
+      .grid{ grid-template-columns:1fr; }
+      .main{ flex-direction:column; align-items:center; }
+      .side{ width:100%; max-width:980px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>GROWING HUB BY BRIAN👾</h1>
+        <div class="subtitle">Public legendary quotes — read • copy • be inspired</div>
+      </div>
+    </header>
+
+    <div class="cats" role="navigation" aria-label="categories">
+      <button class="cat-btn" data-cat="Life">Life</button>
+      <button class="cat-btn" data-cat="Love">Love</button>
+      <button class="cat-btn" data-cat="Wisdom">Wisdom</button>
+      <button class="cat-btn" data-cat="Motivation">Motivation</button>
+      <button class="cat-btn" data-cat="Funny">Funny</button>
+      <button class="cat-btn" data-cat="Killer">Killer Quotes</button>
+    </div>
+
+    <div class="main">
+      <div class="left" id="left">
+        <!-- quotes injected here -->
+      </div>
+
+      <aside class="side" id="side">
+        <h3 style="margin:0 0 8px 0">Category</h3>
+        <div id="catLabel" style="font-weight:900; font-size:18px">— Choose a category —</div>
+        <div style="margin-top:10px">Total quotes: <span id="totalCount">0</span></div>
+        <div style="margin-top:12px; font-size:13px; opacity:0.9;">Public can read & copy. Admin (password) can add/edit/delete temporarily while logged in.</div>
+      </aside>
+    </div>
+
+    <button class="admin-fab" id="adminFab" title="Admin">⚙</button>
+
+    <!-- modal -->
+    <div class="modal" id="modal">
+      <div class="panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div id="loginView">
+          <h2 id="modalTitle" style="margin-top:0">Admin Login</h2>
+          <p style="opacity:0.9">Enter admin password to manage quotes.</p>
+          <div style="margin-top:12px">
+            <input id="adminPass" class="input" placeholder="Admin password" type="password" />
+          </div>
+          <div style="margin-top:12px; display:flex; gap:8px;">
+            <button class="btn-primary" id="loginBtn">Login</button>
+            <button class="btn-muted" id="closeModalBtn">Close</button>
+          </div>
+        </div>
+
+        <div id="panelView" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="margin:0">Admin Panel</h2>
+            <div>
+              <button class="btn-muted" id="logoutBtn">Logout</button>
+            </div>
+          </div>
+
+          <p style="opacity:0.9; margin-top:8px;">Add a quote to the selected category. Edit/Delete appear inline while admin is logged in.</p>
+
+          <div class="grid" style="margin-top:12px;">
+            <div>
+              <label style="font-weight:900">Category</label>
+              <select id="adminCategory" class="input" style="margin-top:8px;">
+                <option>Life</option><option>Love</option><option>Wisdom</option><option>Motivation</option><option>Funny</option><option>Killer</option>
+              </select>
+
+              <label style="font-weight:900;margin-top:8px;display:block;">Quote text</label>
+              <textarea id="adminQuote" placeholder="Write or paste the quote here..." class="input"></textarea>
+
+              <label style="font-weight:900;margin-top:8px;display:block;">Author (optional)</label>
+              <input id="adminAuthor" class="input" placeholder="Author name (optional)">
+
+              <div style="margin-top:10px; display:flex; gap:8px;">
+                <button class="btn-primary" id="addQuoteBtn">Add Quote</button>
+                <button class="btn-muted" id="closePanelBtn">Close</button>
+              </div>
+            </div>
+            <div>
+              <h4 style="margin-top:0">Admin Tips</h4>
+              <ul style="opacity:0.95; line-height:1.6;">
+                <li>Preload runs once (first visit). Future changes are saved in your browser.</li>
+                <li>Edit/Delete buttons are visible only while you're logged in as admin.</li>
+                <li>Clearing browser storage resets everything.</li>
+              </ul>
+
+              <div style="margin-top:12px">
+                <label style="font-weight:900">Quick view</label>
+                <div style="display:flex;flex-wrap:wrap; gap:8px; margin-top:8px;">
+                  <button class="btn-muted quick" data-cat="Life">Life</button>
+                  <button class="btn-muted quick" data-cat="Love">Love</button>
+                  <button class="btn-muted quick" data-cat="Wisdom">Wisdom</button>
+                  <button class="btn-muted quick" data-cat="Motivation">Motivation</button>
+                  <button class="btn-muted quick" data-cat="Funny">Funny</button>
+                  <button class="btn-muted quick" data-cat="Killer">Killer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <footer>Made with neon vibes • Admin password is fixed (Brian@123)</footer>
+  </div>
+
+  <script>
+    // CONFIG
+    const ADMIN_PASSWORD = "Brian@123";
+    const STORE_KEY = "brian_growing_hub_v2";
+    const INIT_FLAG = "brian_growing_hub_init_v2";
+
+    // PRELOAD: 29+ per category
+    const PRELOAD = {
+      "Life": [
+        "Life is what happens when you’re busy making other plans. — John Lennon",
+        "Get busy living or get busy dying. — Stephen King",
+        "The purpose of life is a life of purpose. — Robert Byrne",
+        "Not how long, but how well you have lived is the main thing. — Seneca",
+        "Turn your wounds into wisdom. — Oprah Winfrey",
+        "Life is either a daring adventure or nothing at all. — Helen Keller",
+        "Good friends, good books, and a sleepy conscience: this is the ideal life. — Mark Twain",
+        "The unexamined life is not worth living. — Socrates",
+        "You only live once, but if you do it right, once is enough. — Mae West",
+        "Difficulties in life are intended to make us better, not bitter. — Dan Reeves",
+        "Do not take life too seriously. You will never get out of it alive. — Elbert Hubbard",
+        "In the middle of every difficulty lies opportunity. — Albert Einstein",
+        "Keep smiling, because life is a beautiful thing and there’s so much to smile about. — Marilyn Monroe",
+        "To live is the rarest thing in the world. Most people exist, that is all. — Oscar Wilde",
+        "Life itself is the most wonderful fairy tale. — Hans Christian Andersen",
+        "An unexamined life is not worth living. — Plato",
+        "Life is short, and it is here to be lived. — Kate Winslet",
+        "The biggest adventure you can take is to live the life of your dreams. — Oprah Winfrey",
+        "Live life to the fullest, and focus on the positive. — Matt Cameron",
+        "Life is made of ever so many partings welded together. — Charles Dickens",
+        "In three words I can sum up everything I’ve learned about life: it goes on. — Robert Frost",
+        "Your time is limited, so don’t waste it living someone else’s life. — Steve Jobs",
+        "Live as if you were to die tomorrow. Learn as if you were to live forever. — Mahatma Gandhi",
+        "Don’t count the days, make the days count. — Muhammad Ali",
+        "Life is trying things to see if they work. — Ray Bradbury",
+        "Do not dwell in the past, do not dream of the future, concentrate the mind on the present moment. — Buddha",
+        "A man who dares to waste one hour of time has not discovered the value of life. — Charles Darwin",
+        "Life is made of moments, don’t wait for them, create them. — Unknown",
+        "Enjoy life. There’s plenty of time to be dead. — Hans Christian Andersen"
+      ],
+      "Love": [
+        "Being deeply loved by someone gives you strength, while loving someone deeply gives you courage. — Lao Tzu",
+        "We accept the love we think we deserve. — Stephen Chbosky",
+        "Love all, trust a few, do wrong to none. — William Shakespeare",
+        "Where there is love there is life. — Mahatma Gandhi",
+        "Love is composed of a single soul inhabiting two bodies. — Aristotle",
+        "There is no remedy for love but to love more. — Henry David Thoreau",
+        "You know you’re in love when you can’t fall asleep because reality is finally better than your dreams. — Dr. Seuss",
+        "Love is not only something you feel, it is something you do. — David Wilkerson",
+        "The greatest thing you’ll ever learn is just to love and be loved in return. — Eden Ahbez",
+        "Love does not dominate; it cultivates. — Johann Wolfgang von Goethe",
+        "Love is like the wind, you can’t see it but you can feel it. — Nicholas Sparks",
+        "To love oneself is the beginning of a lifelong romance. — Oscar Wilde",
+        "Love recognizes no barriers. — Maya Angelou",
+        "Love is when the other person’s happiness is more important than your own. — H. Jackson Brown, Jr.",
+        "At the touch of love everyone becomes a poet. — Plato",
+        "Love is friendship set on fire. — Jeremy Taylor",
+        "I love you not because of who you are, but because of who I am when I am with you. — Roy Croft",
+        "The best thing to hold onto in life is each other. — Audrey Hepburn",
+        "Love is a better teacher than duty. — Albert Einstein",
+        "There is always some madness in love. — Friedrich Nietzsche",
+        "The giving of love is an education in itself. — Eleanor Roosevelt",
+        "To love is nothing. To be loved is something. But to love and be loved, that’s everything. — T. Tolis",
+        "Love makes your soul crawl out from its hiding place. — Zora Neale Hurston",
+        "You can’t blame gravity for falling in love. — Albert Einstein",
+        "A simple ‘I love you’ means more than money. — Frank Sinatra",
+        "We loved with a love that was more than love. — Edgar Allan Poe",
+        "Love is the beauty of the soul. — Saint Augustine",
+        "Love is the whole thing. We are only pieces. — Rumi",
+        "One word frees us of all the weight and pain of life: that word is love. — Sophocles"
+      ],
+      "Wisdom":[
+        "Knowing yourself is the beginning of all wisdom. — Aristotle",
+        "The only true wisdom is in knowing you know nothing. — Socrates",
+        "Turn your wounds into wisdom. — Oprah Winfrey",
+        "It is not length of life, but depth of life. — Ralph Waldo Emerson",
+        "The fool doth think he is wise, but the wise man knows himself to be a fool. — William Shakespeare",
+        "Count your age by friends, not years. Count your life by smiles, not tears. — John Lennon",
+        "Wisdom begins in wonder. — Socrates",
+        "Educating the mind without educating the heart is no education at all. — Aristotle",
+        "Patience is the companion of wisdom. — Saint Augustine",
+        "It is better to remain silent at the risk of being thought a fool, than to talk and remove all doubt. — Maurice Switzer",
+        "Wisdom is the reward you get for a lifetime of listening when you’d have preferred to talk. — Doug Larson",
+        "Knowing others is intelligence; knowing yourself is true wisdom. — Lao Tzu",
+        "Do not seek to follow in the footsteps of the wise; seek what they sought. — Matsuo Basho",
+        "Knowledge speaks, but wisdom listens. — Jimi Hendrix",
+        "A fool thinks himself to be wise, but a wise man knows himself to be a fool. — William Shakespeare",
+        "Wisdom is not a product of schooling but of the lifelong attempt to acquire it. — Albert Einstein",
+        "The simple things are also the most extraordinary things, and only the wise can see them. — Paulo Coelho",
+        "Wisdom comes from experience. Experience is often a result of lack of wisdom. — Terry Pratchett",
+        "The truest wisdom is a resolute determination. — Napoleon Bonaparte",
+        "Silence is the sleep that nourishes wisdom. — Francis Bacon",
+        "A wise man will make more opportunities than he finds. — Francis Bacon",
+        "Wisdom is knowing the right path to take. Integrity is taking it. — M.H. McKee",
+        "By three methods we may learn wisdom: First, by reflection, which is noblest; Second, by imitation, which is easiest; and Third by experience, which is the bitterest. — Confucius",
+        "Wisdom outweighs any wealth. — Sophocles",
+        "Wisdom is the supreme part of happiness. — Sophocles",
+        "The wise man does not lay up his own treasures. The more he gives to others, the more he has for his own. — Lao Tzu",
+        "Wisdom is oftentimes nearer when we stoop than when we soar. — William Wordsworth",
+        "He who opens a school door closes a prison. — Victor Hugo"
+      ],
+      "Motivation":[
+        "Don’t watch the clock; do what it does. Keep going. — Sam Levenson",
+        "The future depends on what you do today. — Mahatma Gandhi",
+        "The secret of getting ahead is getting started. — Mark Twain",
+        "It always seems impossible until it’s done. — Nelson Mandela",
+        "Hardships often prepare ordinary people for an extraordinary destiny. — C.S. Lewis",
+        "Push yourself, because no one else is going to do it for you. — Unknown",
+        "The way to get started is to quit talking and begin doing. — Walt Disney",
+        "Great things never come from comfort zones. — Unknown",
+        "Success is not final, failure is not fatal: It is the courage to continue that counts. — Winston Churchill",
+        "Opportunities don’t happen. You create them. — Chris Grosser",
+        "Do something today that your future self will thank you for. — Sean Patrick Flanery",
+        "Don’t wait for opportunity. Create it. — George Bernard Shaw",
+        "The harder you work for something, the greater you’ll feel when you achieve it. — Unknown",
+        "Dream bigger. Do bigger. — Unknown",
+        "Don’t stop when you’re tired. Stop when you’re done. — Marilyn Monroe",
+        "Wake up with determination. Go to bed with satisfaction. — Unknown",
+        "Do what you can with all you have, wherever you are. — Theodore Roosevelt",
+        "Little things make big days. — Unknown",
+        "It’s going to be hard, but hard does not mean impossible. — Unknown",
+        "Don’t limit your challenges. Challenge your limits. — Unknown",
+        "Sometimes later becomes never. Do it now. — Unknown",
+        "Great things never come from comfort zones. — Roy T. Bennett",
+        "Push harder than yesterday if you want a different tomorrow. — Unknown",
+        "Don’t be pushed around by the fears in your mind. Be led by the dreams in your heart. — Roy T. Bennett",
+        "Success doesn’t just find you. You have to go out and get it. — Unknown",
+        "If you get tired, learn to rest, not to quit. — Banksy",
+        "Your limitation—it’s only your imagination. — Unknown",
+        "The man who moves a mountain begins by carrying away small stones. — Confucius",
+        "Do one thing every day that scares you. — Eleanor Roosevelt"
+      ],
+      "Funny":[
+        "I am so clever that sometimes I don’t understand a single word of what I am saying. — Oscar Wilde",
+        "Get your facts first, then you can distort them as you please. — Mark Twain",
+        "A day without sunshine is like, you know, night. — Steve Martin",
+        "I refuse to join any club that would have me as a member. — Groucho Marx",
+        "If you think you are too small to make a difference, try sleeping with a mosquito. — Dalai Lama",
+        "I can resist everything except temptation. — Oscar Wilde",
+        "People say nothing is impossible, but I do nothing every day. — A.A. Milne",
+        "Behind every great man is a woman rolling her eyes. — Jim Carrey",
+        "Always borrow money from a pessimist. He won’t expect it back. — Oscar Wilde",
+        "If you think nobody cares if you’re alive, try missing a couple of car payments. — Earl Wilson",
+        "I used to think I was indecisive, but now I’m not so sure. — Unknown",
+        "I’m not arguing, I’m just explaining why I’m right. — Unknown",
+        "My fake plants died because I did not pretend to water them. — Mitch Hedberg",
+        "I am an early bird and a night owl… so I am wise and I have worms. — Michael Scott",
+        "I could agree with you, but then we’d both be wrong. — Harvey Specter",
+        "I love deadlines. I love the whooshing noise they make as they go by. — Douglas Adams",
+        "I always arrive late at the office, but I make up for it by leaving early. — Charles Lamb",
+        "If at first you don’t succeed, then skydiving definitely isn’t for you. — Steven Wright",
+        "I’m on a seafood diet. I see food and I eat it. — Unknown",
+        "Light travels faster than sound. This is why some people appear bright until you hear them speak. — Alan Dundes",
+        "Why don’t scientists trust atoms? Because they make up everything. — Unknown",
+        "If you want your children to listen, try talking softly to someone else. — Ann Landers",
+        "Money can’t buy happiness, but it can buy marshmallows, which is pretty close. — Unknown",
+        "The elevator to success is out of order. You’ll have to use the stairs, one step at a time. — Joe Girard",
+        "Why don’t skeletons fight each other? They don’t have the guts. — Unknown",
+        "My therapist says I have a preoccupation with vengeance. We’ll see about that. — Stewart Francis",
+        "I used to sell furniture for a living. The trouble was, it was somebody else's. — Unknown",
+        "I’m not superstitious, but I am a little stitious. — Michael Scott",
+        "Life is short. Smile while you still have teeth. — Mallory Hopkins"
+      ],
+      "Killer":[
+        "The world breaks everyone, and afterward, some are strong at the broken places. — Ernest Hemingway",
+        "If you are going through hell, keep going. — Winston Churchill",
+        "You must be the change you wish to see in the world. — Mahatma Gandhi",
+        "The only thing necessary for the triumph of evil is for good men to do nothing. — Edmund Burke",
+        "He who is not courageous enough to take risks will accomplish nothing in life. — Muhammad Ali",
+        "It is not the size of the dog in the fight, but the size of the fight in the dog. — Mark Twain",
+        "Fortune favors the bold. — Virgil",
+        "Better to die on your feet than live on your knees. — Emiliano Zapata",
+        "I came, I saw, I conquered. — Julius Caesar",
+        "Victory belongs to the most persevering. — Napoleon Bonaparte",
+        "The brave may not live forever, but the cautious do not live at all. — Richard Brinsley Sheridan",
+        "Do not pray for easy lives. Pray to be stronger men. — John F. Kennedy",
+        "You have enemies? Good. That means you've stood up for something, sometime in your life. — Winston Churchill",
+        "Cowards die many times before their deaths; the valiant never taste of death but once. — William Shakespeare",
+        "Pain is temporary. Quitting lasts forever. — Lance Armstrong",
+        "I don't measure a man's success by how high he climbs but how high he bounces when he hits bottom. — George S. Patton",
+        "A man who has no imagination has no wings. — Muhammad Ali",
+        "The difference between the impossible and the possible lies in a man's determination. — Tommy Lasorda",
+        "When you're at the end of your rope, tie a knot and hold on. — Theodore Roosevelt",
+        "I am not afraid... I was born to do this. — Joan of Arc",
+        "The harder the conflict, the greater the triumph. — George Washington",
+        "If you don't stand for something you will fall for anything. — Malcolm X",
+        "I did not come to play the game or to take part. I came to win. — Jesse Owens",
+        "Lead, follow, or get out of the way. — Thomas Paine",
+        "Fortune favors the bold. — Terence",
+        "Life's battles don't always go to the stronger or faster man. — Anonymous",
+        "The best revenge is to be unlike him who performed the injury. — Marcus Aurelius",
+        "A lion doesn't concern himself with the opinion of sheep. — Unknown",
+        "It is better to fail in originality than to succeed in imitation. — Herman Melville"
+      ]
+    };
+
+    // Storage helpers
+    function loadStore(){
+      try{ return JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch(e){ console.error(e); return null; }
+    }
+    function saveStore(obj){ localStorage.setItem(STORE_KEY, JSON.stringify(obj)); }
+
+    // Initialize only once
+    if (!localStorage.getItem(INIT_FLAG)) {
+      // deep clone preload and store
+      saveStore(JSON.parse(JSON.stringify(PRELOAD)));
+      localStorage.setItem(INIT_FLAG, "1");
+    } else {
+      // ensure store exists
+      if (!localStorage.getItem(STORE_KEY)) saveStore(JSON.parse(JSON.stringify(PRELOAD)));
+    }
+
+    // State
+    let db = loadStore();
+    let currentCat = null;
+    let isAdmin = false;
+
+    const left = document.getElementById("left");
+    const catLabel = document.getElementById("catLabel");
+    const totalCountEl = document.getElementById("totalCount");
+    const modal = document.getElementById("modal");
+    const loginView = document.getElementById("loginView");
+    const panelView = document.getElementById("panelView");
+
+    // Render category
+    function renderCategory(cat){
+      db = loadStore() || PRELOAD;
+      currentCat = cat;
+      catLabel.textContent = cat === "Killer" ? "Killer Quotes" : cat;
+      const total = Object.values(db).flat().length;
+      totalCountEl.textContent = total;
+      left.innerHTML = "";
+      const list = db[cat] || [];
+      if (!list.length){
+        const p = document.createElement("div"); p.style.opacity = "0.9"; p.style.fontSize = "18px";
+        p.textContent = `No quotes in ${cat} yet.`; left.appendChild(p); return;
+      }
+      list.forEach((text, idx) => {
+        const card = document.createElement("article"); card.className = "quote-card";
+        // split author
+        let quoteText = text; let author = "";
+        const sep = " — ";
+        if (text.includes(sep)){
+          const parts = text.split(sep);
+          author = parts.pop().trim();
+          quoteText = parts.join(sep).trim();
+        }
+        const t = document.createElement("div"); t.className = "quote-text"; t.innerText = quoteText;
+        const a = document.createElement("div"); a.className = "quote-author"; a.innerText = author;
+
+        const actions = document.createElement("div"); actions.className = "actions";
+        // copy button (public)
+        const copyBtn = document.createElement("button"); copyBtn.className = "btn copy"; copyBtn.innerText = "Copy";
+        copyBtn.addEventListener("click", ()=>{ copyToClipboard(text); });
+        actions.appendChild(copyBtn);
+
+        // admin controls only visible when isAdmin true
+        if (isAdmin){
+          const editBtn = document.createElement("button"); editBtn.className = "btn edit"; editBtn.innerText = "Edit";
+          editBtn.addEventListener("click", ()=> openEdit(cat, idx));
+          const delBtn = document.createElement("button"); delBtn.className = "btn del"; delBtn.innerText = "Delete";
+          delBtn.addEventListener("click", ()=> {
+            if (confirm("Delete this quote?")) { deleteQuote(cat, idx); }
+          });
+          actions.appendChild(editBtn);
+          actions.appendChild(delBtn);
+        }
+
+        card.appendChild(t);
+        if (author) card.appendChild(a);
+        card.appendChild(actions);
+        left.appendChild(card);
+      });
+      // scroll to top for clarity
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    // Copy helper
+    function copyToClipboard(text){
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(()=> toast("Copied"));
+      } else {
+        const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); toast("Copied"); } catch(e){ alert("Copy failed"); }
+        ta.remove();
+      }
+    }
+    function toast(msg){
+      const el = document.createElement("div"); el.innerText = msg;
+      Object.assign(el.style, {position:"fixed", right:"18px", bottom:"92px", background:"linear-gradient(90deg,#00e5ff,#7affc7)", color:"#02121a", padding:"8px 12px", borderRadius:"10px", fontWeight:"900", zIndex:9999});
+      document.body.appendChild(el);
+      setTimeout(()=> el.style.opacity = "0", 1400);
+      setTimeout(()=> el.remove(), 2000);
+    }
+
+    // Admin modal handlers
+    document.getElementById("adminFab").addEventListener("click", ()=> { openModal(); document.getElementById("adminPass").focus(); });
+    document.getElementById("closeModalBtn").addEventListener("click", closeModal);
+    document.getElementById("closePanelBtn").addEventListener("click", closeModal);
+    document.getElementById("loginBtn").addEventListener("click", attemptLogin);
+    document.getElementById("adminPass").addEventListener("keydown", (e)=> { if (e.key === "Enter") attemptLogin(); });
+    document.getElementById("logoutBtn").addEventListener("click", ()=> { logoutAdmin(); });
+
+    // Quick buttons inside panel
+    document.querySelectorAll(".quick").forEach(b=> b.addEventListener("click", (e)=> { renderCategory(e.currentTarget.dataset.cat); closeModal(); }));
+
+    // attempt login
+    function attemptLogin(){
+      const val = document.getElementById("adminPass").value || "";
+      if (val === ADMIN_PASSWORD){
+        isAdmin = true;
+        showPanel();
+        document.getElementById("adminPass").value = "";
+        renderCategory(currentCat || "Life");
+        toast("Admin enabled");
+      } else {
+        alert("Wrong password");
+      }
+    }
+    function openModal(){ modal.classList.add("open"); showLogin(); }
+    function closeModal(){ modal.classList.remove("open"); showLogin(); }
+    function showLogin(){ loginView.style.display = ""; panelView.style.display = "none"; document.getElementById("adminPass").value = ""; }
+    function showPanel(){ loginView.style.display = "none"; panelView.style.display = ""; }
+
+    function logoutAdmin(){
+      isAdmin = false;
+      showLogin();
+      renderCategory(currentCat || "Life");
+      closeModal();
+      toast("Logged out");
+    }
+
+    // Add quote
+    document.getElementById("addQuoteBtn").addEventListener("click", ()=>{
+      const cat = document.getElementById("adminCategory").value;
+      const q = document.getElementById("adminQuote").value.trim();
+      const a = document.getElementById("adminAuthor").value.trim();
+      if (!q) { alert("Add quote text"); return; }
+      const full = a ? `${q} — ${a}` : q;
+      const store = loadStore() || {};
+      store[cat] = store[cat] || [];
+      store[cat].unshift(full); // add to top
+      saveStore(store);
+      document.getElementById("adminQuote").value = "";
+      document.getElementById("adminAuthor").value = "";
+      toast("Added");
+      renderCategory(cat);
+    });
+
+    // Edit / Delete functions
+    function openEdit(cat, idx){
+      const store = loadStore() || {};
+      const old = store[cat][idx];
+      const newText = prompt("Edit quote:", old);
+      if (newText && newText.trim()){
+        store[cat][idx] = newText.trim();
+        saveStore(store);
+        toast("Saved");
+        renderCategory(cat);
+      }
+    }
+    function deleteQuote(cat, idx){
+      const store = loadStore() || {};
+      store[cat].splice(idx,1);
+      saveStore(store);
+      toast("Deleted");
+      renderCategory(cat);
+    }
+
+    // category buttons
+    document.querySelectorAll(".cat-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const c = e.currentTarget.dataset.cat;
+        renderCategory(c);
+      });
+    });
+
+    // initial render
+    if (!currentCat) renderCategory("Life");
+
+    // expose some helpers for debugging (optional)
+    window._save = saveStore;
+    window._load = loadStore;
+
+    // helper functions for storage (inside script scope)
+    function loadStore(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY) || "null"); }catch(e){ return null; } }
+    function saveStore(obj){ localStorage.setItem(STORE_KEY, JSON.stringify(obj)); }
+
+  </script>
+</body>
+</html>
