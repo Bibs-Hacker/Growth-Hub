@@ -9,7 +9,7 @@
 ---
 
 ## ✨ Features
-- 🔐 **Admin Control** (Password protected: *Brian@123*)  
+- 🔐 **Admin Control** (Password protected: =="#"==)  
 - 📜 **6 Legendary Categories**:
   - 🌱 Life
   - ❤️ Love
@@ -19,8 +19,7 @@
   - 🔥 Killer Quotes (Savage/Strong)  
 - 📝 **Add / Edit / Delete Quotes** (admin only)  
 - 💾 **Local Storage Support** (quotes persist after reload)  
-- 🎨 **Rotating Neon Borders** (readable + aesthetic)  
-- 🚀 **Preloaded 29+ Famous Quotes per Category** (Einstein, Ali, Wilde, Nietzsche & more)  
+- 🎨 **Rotating Neon Borders** 
 
 ---
 
@@ -34,4 +33,4 @@
 ## ⚡ Quick Start
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Bibs-hacker/growing-hub.git
+   git clone https://github.com/Bibs-Hacker/growing-hub.git
